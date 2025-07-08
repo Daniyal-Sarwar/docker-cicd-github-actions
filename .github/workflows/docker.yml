@@ -73,7 +73,7 @@ jobs:
       - name: Test Docker Compose services
         run: |
           # direct app health check
-          curl -f http://localhost:3000/health || exit 1
+          curl -f http://localhost:3002/health || exit 1
           echo "✅ Direct app access successful"
 
           # nginx proxy health check
@@ -81,7 +81,7 @@ jobs:
           echo "✅ Nginx proxy access successful"
 
           # app content test
-          response=$(curl -s http://localhost:3000/)
+          response=$(curl -s http://localhost:3002/)
           if echo "$response" | grep -q "Hello from Docker CI/CD Demo"; then
             echo "✅ App functionality test passed"
           else
