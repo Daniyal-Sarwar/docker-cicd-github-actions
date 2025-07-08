@@ -1,11 +1,11 @@
 name: Docker CI/CD Pipeline
 
 on:
+  workflow_dispatch:       # ← enables the “Run workflow” button in GitHub
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-
 env:
   DOCKER_IMAGE_NAME: docker-cicd-demo
   DOCKER_REGISTRY: docker.io
