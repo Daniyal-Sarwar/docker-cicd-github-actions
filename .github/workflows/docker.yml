@@ -1,6 +1,7 @@
 name: Docker CI/CD Pipeline
 
 on:
+  workflow_dispatch:       # allow manual runs
   push:
     branches: [ main, master ]
   pull_request:
@@ -43,12 +44,16 @@ jobs:
 
       - name: Test Docker image
         run: |
-          docker run -d -p 3000:3000 --name test-container \
+          # Clean up any previous test-container to free port 3000
+          docker rm -f test-container 2>/dev/null || true
+
+          # Run the test container
+          docker run --rm -d -p 3000:3000 --name test-container \
             ${{ env.DOCKER_IMAGE_NAME }}:test
           sleep 10
           curl -f http://localhost:3000/health
-          docker stop test-container
-          docker rm test-container
+
+          # (Container will auto-remove due to --rm)
 
   # Job 2: Build and Push to Docker Hub (only on main/master)
   build-and-push:
@@ -88,6 +93,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - name: Logout from Docker Hub
-        run: docker logout
-        
