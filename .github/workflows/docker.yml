@@ -44,8 +44,8 @@ jobs:
 
       - name: Test Docker image
         run: |
-          # Clean up any previous test-container to free port 3000
-          docker rm -f $(docker ps -aq)
+          # Clean up any previous test-container
+          docker ps -q --filter "name=test-container" | grep -q . && docker rm -f test-container || true
           # Run the test container
           docker run --rm -d -p 3000:3000 --name test-container \
             ${{ env.DOCKER_IMAGE_NAME }}:test
